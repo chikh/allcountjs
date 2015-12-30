@@ -67,7 +67,7 @@ exports.checkbox = function (name, storeAsArrayField) {
 };
 
 exports.fixedReference = function (name, referenceEntityTypeId) {
-    return new Field({
+    return new ReferenceField({
         name: name,
         fieldType: {
             id: 'reference',
@@ -78,7 +78,7 @@ exports.fixedReference = function (name, referenceEntityTypeId) {
 };
 
 exports.reference = function (name, referenceEntityTypeId) {
-    return new Field({
+    return new ReferenceField({
         name: name,
         fieldType: {
             id: 'reference',
@@ -88,7 +88,7 @@ exports.reference = function (name, referenceEntityTypeId) {
 };
 
 exports.multiReference = function (name, referenceEntityTypeId) {
-    return new Field({
+    return new ReferenceField({
         name: name,
         fieldType: {
             id: 'multiReference',
@@ -162,6 +162,17 @@ exports.email = function (name) {
 function Field(config) {
     _.extend(this, config);
 }
+
+function ReferenceField(config) {
+    Field.call(this, config);
+}
+
+ReferenceField.prototype = Field.prototype;
+
+ReferenceField.prototype.dependent = function (dependentFieldName) {
+    this.dependentFieldName = dependentFieldName;
+    return this;
+};
 
 Field.prototype.computed = function (expression) {
     this.computeExpression = expression;

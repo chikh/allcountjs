@@ -123,7 +123,7 @@ module.exports = function (crudService, referenceService, entityDescriptionServi
     };
 
     route.referenceValues = function (req, res) { //TODO support reference TOP values
-        referenceService.referenceValues({entityTypeId: req.params.entityTypeId}, req.query.query).then(function (result) {
+        referenceService.referenceValues({entityTypeId: req.params.entityTypeId}, req.query.query /*TODO: #58: add here dependentFieldNameAndValue*/).then(function (result) {
             res.json(result);
         });
     };

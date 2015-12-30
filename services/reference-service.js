@@ -1,11 +1,17 @@
-var Q = require('q');
+var _ = require('lodash');
 
 module.exports = function (entityDescriptionService, crudService) {
     var service = {};
 
-    service.referenceValues = function (crudId, queryText) {
+    service.referenceValues = function (crudId, queryText, dependentFieldNameAndValue) {
         var referenceFieldName = entityDescriptionService.entityDescription(crudId).referenceNameExpression;
-        return crudService.strategyForCrudId(crudId).findAll({textSearch: queryText}).then(function (entities) {
+        var query = {textSearch: queryText};
+        if (dependentFieldNameAndValue) {
+            var filtering = {};
+            filtering[dependentFieldNameAndValue.dependentFieldName] = dependentFieldNameAndValue.dependentFieldValue;
+            query.filtering = filtering;
+        }
+        return crudService.strategyForCrudId(crudId).findAll(query).then(function (entities) {
             return entities.map(function (e) {
                 return {id: e.id, name: e[referenceFieldName]};
             })
